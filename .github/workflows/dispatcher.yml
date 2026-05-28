@@ -39,6 +39,7 @@ jobs:
       env:
         ENVIRONMENT: ${{ inputs.environment }}
         PUBLISH: ${{ inputs.publish }}
+        BASE_URL: ${{ vars.BASE_URL }}
       run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
