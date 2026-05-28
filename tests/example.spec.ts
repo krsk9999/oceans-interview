@@ -1,24 +1,41 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@fixtures';
+import type { AutomationHomePage, BigElementsPage } from '@pages';
 
-test.describe('Example tests', () => {
+test.describe('Example tests', { tag: '@smoke' }, () => {
+  test('has title', async ({
+    page,
+    automationHomePage,
+  }: {
+    page: import('@playwright/test').Page;
+    automationHomePage: AutomationHomePage;
+  }) => {
+    await test.step('Navigate to the automation home page', async () => {
+      await automationHomePage.gotoAutomationHome();
+    });
 
-  test('has title', async ({ page }) => {
-  await page.goto('');
+    await test.step('Validate page title contains "Automation Practice - Ultimate QA"', async () => {
+      await expect(page).toHaveTitle(/Automation Practice - Ultimate QA/);
+    });
+  });
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Automation Practice - Ultimate QA/);
-});
+  test('get started link', async ({
+    automationHomePage,
+    bigElementsPage,
+  }: {
+    automationHomePage: AutomationHomePage;
+    bigElementsPage: BigElementsPage;
+  }) => {
+    await test.step('Navigate to the automation home page', async () => {
+      await automationHomePage.gotoAutomationHome();
+    });
 
-test('get started link', async ({ page }) => {
-  await page.goto('');
+    await test.step('Click the "Big page with many elements" link', async () => {
+      await expect(automationHomePage.$bigPageLink).toBeVisible();
+      await automationHomePage.clickBigPageLink();
+    });
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Big page with many elements' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Skills Improved:' })).toBeVisible();
-
-  await page.waitForTimeout(5000);
-});
-
+    await test.step('Validate "Skills Improved:" heading is visible', async () => {
+      await expect(bigElementsPage.$skillsImprovedHeading).toBeVisible();
+    });
+  });
 });
