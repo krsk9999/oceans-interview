@@ -1,7 +1,7 @@
 # oceans-interview
 
 End-to-end test automation framework built with [Playwright](https://playwright.dev/) and
-TypeScript. Tests are written against the [Ultimate QA automation practice site](https://ultimateqa.com/automation),
+TypeScript. Tests are written against the [SauceDemo practice site](https://www.saucedemo.com/),
 follow a strict Page Object Model, and run on every push, PR, or manual dispatch via GitHub Actions.
 The HTML report is published to GitHub Pages.
 
@@ -36,7 +36,7 @@ The framework resolves the target site from `BASE_URL` (defined in
 Create a local `.env` at the project root:
 
 ```bash
-BASE_URL=https://ultimateqa.com/automation
+BASE_URL=https://www.saucedemo.com/
 ```
 
 `.env` is git-ignored. In CI the same value is injected from the repo-level GitHub Actions variable
@@ -49,10 +49,10 @@ BASE_URL=https://ultimateqa.com/automation
 npm test
 
 # Run a single spec
-npx playwright test tests/example.spec.ts
+npx playwright test tests/saucedemo.spec.ts
 
 # Run by title pattern
-npx playwright test --grep "has title"
+npx playwright test --grep "login with valid credentials"
 
 # Open the HTML report from the last run
 npx playwright show-report
@@ -76,11 +76,15 @@ npx playwright test --headed
 │   ├── fixtures/           # Playwright test fixtures (page + utility merges)
 │   ├── pages/              # Page Object Models (extend BasePage)
 │   │   ├── base.page.ts
-│   │   └── ultimateqa/     # Pages for ultimateqa.com
+│   │   └── saucedemo/      # Pages for saucedemo.com
+│   │       ├── home.page.ts      # Login page (username/password/login)
+│   │       └── products.page.ts  # Inventory page (add product to cart)
+│   ├── test-data/          # Static test data
+│   │   └── users.json      # SauceDemo usernames + shared password
 │   ├── types/              # Shared TypeScript types
 │   └── utils/              # Shared helpers
 ├── tests/
-│   └── example.spec.ts     # Example tests against the Ultimate QA site
+│   └── saucedemo.spec.ts   # Login + add-to-cart flow against SauceDemo
 ├── playwright.config.ts
 ├── tsconfig.json           # Defines @fixtures, @pages, @utils, @types path aliases
 └── package.json
@@ -90,7 +94,7 @@ Import from path aliases — never from relative paths:
 
 ```ts
 import { test, expect } from '@fixtures';
-import type { AutomationHomePage } from '@pages';
+import type { SauceLoginPage, SauceProductsPage } from '@pages';
 ```
 
 ## Authoring tests
@@ -108,7 +112,7 @@ A new page object goes through three steps:
 3. Register it as a fixture in [`src/fixtures/pages.fixture.ts`](./src/fixtures/pages.fixture.ts).
 
 Specs should wrap each logical step in `test.step()` and assert visibility before any interaction.
-See [`tests/example.spec.ts`](./tests/example.spec.ts) for the canonical pattern.
+See [`tests/saucedemo.spec.ts`](./tests/saucedemo.spec.ts) for the canonical pattern.
 
 ## CI/CD
 
