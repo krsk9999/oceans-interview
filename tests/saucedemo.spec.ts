@@ -31,8 +31,6 @@ test.describe('SauceDemo Login Tests', async () => {
             const productName = 'Sauce Labs Backpack';
             const productPage = new SauceProductsPage(page);
             await productPage.addProductToCart(productName);
-
-            await page.waitForTimeout(5000)
         });
 
     });
